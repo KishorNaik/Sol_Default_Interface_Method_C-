@@ -2,15 +2,27 @@
 
 namespace Sol_Demo
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
 
             IDemo demo = new Demo();
-            demo.DemoMethod1();
-            demo.DemoDefaultMethod();
+            demo.DemoMethod();
+            demo.DemoPublicDefaultMethod();
+            demo.DemoVirtualDefaultMethod();
+            demo.DemoAbstractDefaultMethod();
+            Console.WriteLine(demo.Message);
+
+            IDemo.DemoStaticDefaultMethod(); // Static Method
+
+            // Call method throug Class Object
+            Demo demo1Obj = new Demo();
+            // So Here you will get any method throug Object.
+            ((IDemo)demo1Obj).DemoMethod();
+
+            //--------------------------------------------
 
             IA demoA = new DemoC();
             demoA.Display();
@@ -29,34 +41,69 @@ namespace Sol_Demo
 
             demoB = dObj;
             demoB.Display();
-
         }
     }
 
     public interface IDemo
     {
-        void DemoMethod1();
+        void DemoMethod();
 
-        public void DemoDefaultMethod()
+        // Public Method
+        // By Default is virtual method
+        public void DemoPublicDefaultMethod()
         {
-            Console.WriteLine("Default Method Demo");
+            Console.WriteLine("Default Public Method Demo");
+            this.DemoPrivateDefaultMethod();
         }
+
+        // Private Method
+        private void DemoPrivateDefaultMethod()
+        {
+            Console.WriteLine("Demo Default Private Method");
+        }
+
+        // Virtual Method
+        virtual void DemoVirtualDefaultMethod()
+        {
+            Console.WriteLine("Demo Interface : Virtual Method");
+        }
+
+        // Abstract Method
+        abstract void DemoAbstractDefaultMethod();
+
+        //Static Method
+        public static void DemoStaticDefaultMethod()
+        {
+            Console.WriteLine("Demo Interface : static method");
+        }
+
+        // Property
+        public String Message => "Hello";
     }
 
     public class Demo : IDemo
     {
-        void IDemo.DemoMethod1()
+        void IDemo.DemoMethod()
         {
             Console.WriteLine("Demo Method 1 Implement");
         }
 
         // If you want to Override Default Interface Method then do the following procedures
-        //void IDemo.DemoDefaultMethod()
+        //void IDemo.DemoDefaultMethod1()
         //{
         //    Console.WriteLine("Override Default Method Demo");
         //}
-    }
 
+        void IDemo.DemoVirtualDefaultMethod()
+        {
+            Console.WriteLine("Demo Class : Override method");
+        }
+
+        void IDemo.DemoAbstractDefaultMethod()
+        {
+            Console.WriteLine("Demo Override Abstract Method");
+        }
+    }
 
     public interface IA
     {
@@ -84,21 +131,15 @@ namespace Sol_Demo
         }
     }
 
-
-    public class DemoC : IA,IB
+    public class DemoC : IA, IB
     {
-
     }
 
-
-    public interface ID : IA,IB
+    public interface ID : IA, IB
     {
-
     }
 
     public class DemoD : ID
     {
-        
     }
-
 }
